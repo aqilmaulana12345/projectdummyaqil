@@ -6,6 +6,7 @@ import {
   sortProducts,
   getCategories,
   addProduct,
+  deleteProduct
 } from "../api/productApi";
 
 import type { Product, Category } from "../types/product";
@@ -185,18 +186,22 @@ export default function ProductList() {
       {/* === PRODUCT LIST === */}
       {products.length === 0 && <p>No products found</p>}
       {products.map((p) => (
-        <ProductItem
-          key={p.id}
-          product={p}
-          onUpdate={(u) =>
-            setProducts((prev) =>
-              prev.map((p) => (p.id === u.id ? u : p))
-            )
-          }
-          onDelete={(id) =>
-            setProducts((prev) => prev.filter((p) => p.id !== id))
-          }
-        />
+       <ProductItem
+       key={p.id}
+       product={p}
+       onUpdate={(u) =>
+         setProducts((prev) => prev.map((p) => (p.id === u.id ? u : p)))
+       }
+       onDelete={async (id) => {
+         try {
+           await deleteProduct(id); // panggil API delete
+           setProducts((prev) => prev.filter((p) => p.id !== id)); // update UI
+         } catch (err) {
+           alert("Failed to delete product");
+         }
+       }}
+     />
+     
       ))}
 
       {/* === PAGINATION === */}
