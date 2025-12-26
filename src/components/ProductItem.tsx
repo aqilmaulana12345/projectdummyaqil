@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Product } from "../types/product";
-import { updateProduct } from "../api/productApi";
+import { updateProduct,getSingleProduct } from "../api/productApi";
 
 type Props = {
   product: Product;
@@ -22,6 +22,17 @@ export default function ProductItem({ product, onUpdate, onDelete }: Props) {
       setEdit(false);
     } catch {
       alert("Failed to update product");
+    }
+  };
+
+  const handleViewDetail = async () => {
+    try {
+      const detail = await getSingleProduct(product.id);
+      alert(
+        `Title: ${detail.title}\nPrice: $${detail.price}\nCategory: ${detail.category}`
+      );
+    } catch {
+      alert("Failed to load product detail");
     }
   };
   
@@ -101,8 +112,10 @@ export default function ProductItem({ product, onUpdate, onDelete }: Props) {
             </>
           ) : (
             <>
+        
               <button onClick={() => setEdit(true)}>Edit</button>
               <button onClick={() => onDelete(product.id)}>Delete</button>
+              <button onClick={handleViewDetail}>View</button>
             </>
           )}
         </div>
