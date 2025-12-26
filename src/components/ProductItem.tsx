@@ -57,20 +57,16 @@ export default function ProductItem({ product, onUpdate, onDelete }: Props) {
       >
         {/* INFO */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {edit && (
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onloadend = () => setThumbnail(reader.result as string);
-                  reader.readAsDataURL(file);
-                }
-              }}
-            />
-          )}
+        {edit && (
+  <input
+    type="text"
+    placeholder="Thumbnail URL"
+    value={thumbnail}
+    onChange={(e) => setThumbnail(e.target.value)}
+    style={{ padding: 8 }}
+  />
+)}
+
 
           {edit ? (
             <>

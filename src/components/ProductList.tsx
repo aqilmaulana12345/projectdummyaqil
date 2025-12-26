@@ -55,26 +55,34 @@ export default function ProductList() {
   const totalPages = Math.ceil(total / limit);
 
   const handleAddProduct = async () => {
-    if (!newTitle || !newCategory)
-      return alert("Title and Category are required");
-
+    if (!newTitle || !newCategory) {
+      alert("Title and Category are required");
+      return;
+    }
+  
     try {
       const added = await addProduct({
         title: newTitle,
         price: Number(newPrice) || 0,
         category: newCategory,
-        thumbnail: newThumbnail, // kirim URL thumbnail
+        thumbnail:
+          newThumbnail ||
+          "https://via.placeholder.com/150", // fallback URL
       });
-
+  
       setProducts((prev) => [added, ...prev]);
+  
+      // reset form
       setNewTitle("");
       setNewPrice("");
       setNewCategory("");
       setNewThumbnail("");
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Failed to add product");
     }
   };
+  
 
   return (
     <div>
@@ -107,22 +115,15 @@ export default function ProductList() {
           ))}
         </select>
    
-      <input
-  type="file"
-  accept="image/*"
-  onChange={async (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // convert file ke base64
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewThumbnail(reader.result as string); // simpan base64 string
-      };
-      reader.readAsDataURL(file);
-    }
-  }}
-  style={{ marginLeft: 8 }}
+     
+        <input
+  type="text"
+  placeholder="Thumbnail URL"
+  value={newThumbnail}
+  onChange={(e) => setNewThumbnail(e.target.value)}
+  style={{ marginLeft: 8, width: 250 }}
 />
+
 
 {newThumbnail && (
   <img
